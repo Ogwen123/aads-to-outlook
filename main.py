@@ -50,12 +50,12 @@ def done_lessons(method, id=None):
         return
 
 def check_for_past_date(start_date):# returns true if in the past
-    print(datetime.now().month)
     now = datetime.now()
     date = start_date.split("T")[0]
     year = int(date.split("-")[0])
     month = int(date.split("-")[1])
     day = int(date.split("-")[2])
+
     if year < now.year:
         return True
     elif year == now.year:
@@ -73,7 +73,7 @@ def check_for_past_date(start_date):# returns true if in the past
 
 
 def add_to_outlook(lesson):
-    res = requests.post("https://outlook.office365.com/owa/service.svc?action=CreateCalendarEvent&app=Calendar", headers={
+    response = requests.post("https://outlook.office365.com/owa/service.svc?action=CreateCalendarEvent&app=Calendar", headers={
     "Accept": '*/*',
     'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8',
     "Connection": 'keep-alive',
@@ -194,7 +194,7 @@ def add_to_outlook(lesson):
         "UseISO885915": False
     }
     })
-    print(res.status_code)
+    print(response.status_code)
 
 def main():
     done_lessons("get")
@@ -206,7 +206,11 @@ def main():
             print(lesson)
             add_to_outlook(lesson)
     
-    done_lessons("add")
+    with open("last.txt", "w") as last_file:
+        last_file.write(str(datetime.now()))
+        last_file.close()
+
+    done_lessons("add")# update done.json
 
 if __name__ == "__main__":
     main()
