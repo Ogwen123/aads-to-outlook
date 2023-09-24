@@ -1,0 +1,1 @@
+*/12 * * * * cd <path to code folder> && python3 main.py
